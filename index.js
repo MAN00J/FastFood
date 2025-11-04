@@ -4,6 +4,8 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv';
 import orderManage from './App/Routes/web/order.js';
+import UserRoute from './App/Routes/web/UserAccount.Routes.js';
+import SellerRoute from './App/Routes/web/SellerAccount.Routes.js';
 
 dotenv.config();
 
@@ -33,11 +35,15 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/Order',orderManage)
+app.use('/api/UserAccount',UserRoute)
+app.use('/api/SellerAccount',SellerRoute)
+
+
 // Connect to MongoDB
 mongoose.connect(process.env.dburl)
     .then(() => {
         console.log("MongoDB connected");
-        const port = process.env.PORT || 8060; // use capital PORT for Render
+        const port = process.env.PORT || 8060; 
         app.listen(port, () => {
             console.log(`Server running on port ${port}`);
         });

@@ -1,29 +1,46 @@
+
 import mongoose from 'mongoose';
 
-let Schema = mongoose.SchemaTypes()
+let Schema = mongoose.Schema
 
 const SellerModel = new Schema({
-      CompanyName:{
-        type:String,
-        require:true
-    },
-    Address:{
-        type:String,
-        require:true
-    },
-    Email:{
-        type:String,
-        require:true
-    },
-    Phone:{
+     UserId:{
         type:Number,
-        require:true
+        required:true,
+        unique:true
     },
-    Password:{
-        type:String,
-        require:true
+    CompanyName: {
+        type: String,
+        required: true
+    },
+    Address: {
+        type: String,
+        required: true
+    },
+    Email: {
+        type: String,
+        required: true,
+        unique : true
+    },
+    Phone: {
+        type: Number,
+        required: true
+    },
+    Address: {
+        type: String,
+        required: true
+    },
+    Password: {
+        type: String,
+        required: true
+    },
+    RefreshToken:{
+        type:String
+    },
+    Status:{
+        type:String
     }
 })
 
-const SellerAccount = mongoose.model('SellerAccountInfo',SellerModel)
+const SellerAccount = mongoose.model('SellerAccountInfo', SellerModel)
 export default SellerAccount;

@@ -1,26 +1,38 @@
 import mongoose from "mongoose";
 
-let Schema = mongoose.Schema();
+const Schema = mongoose.Schema;
 
-let SignupModel = new  Schema ({
-    Name:{
-        type:String,
-        require:true
-    },
-    Email:{
-        type:String,
-        require:true
-    },
-    Phone:{
-        type:Number,
-        require:true
-    },
-    Password:{
-        type:String,
-        require:true
-    }
+const SignupModel = new Schema({
+  UserId: {
+    type: Number,
+    required: true
+  },
+  Name: {
+    type: String,
+    required: true
+  },
+  Email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  Phone: {
+    type: Number,
+    required: true
+  },
+  Address: {
+    type: String,
+    required: true
+  },
+  Password: {
+    type: String,
+    required: true
+  },
+  RefreshToken: {
+    type: String
+  }
+}, { timestamps: true });
 
-})
+const UserAccount = mongoose.model("AccountInfo", SignupModel);
 
-let UserSignup = mongoose.model("AccountInfo",SignupModel)
-export default UserSignup
+export default UserAccount;
