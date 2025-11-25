@@ -96,3 +96,24 @@ export const SellerLogin = async (req, res) => {
     }
 }
 
+export const LogoutSellerAccount = async(req,res)=>{
+    try{
+        if(!req.body){
+            return res.status(401).json({message:"No data provided !"})
+        }
+        const{userId}=req.body;
+        if(!userId){
+            return res.status(401).json({message:"please provide user Id "})
+
+        }
+        const userFind = await SellerAccount.findOne({userId})
+        if(!userFind){
+            return res.status(401).json({message:"UserId is not registered"})
+        } 
+        userFind.RefreshToken =""
+        await userFind.save()
+        return res.status(200).clearCookie('refreshToken').clearCookie('accessToken').json({message:"logout sucessfully."})
+    }catch{
+
+    }
+}

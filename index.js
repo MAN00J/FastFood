@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import orderManage from './App/Routes/web/order.js';
 import UserRoute from './App/Routes/web/UserAccount.Routes.js';
 import SellerRoute from './App/Routes/web/SellerAccount.Routes.js';
+import AdminLoginRouter from './App/Routes/web/Adminlogin.Router.js';
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use('/api/Order',orderManage)
 app.use('/api/UserAccount',UserRoute)
 app.use('/api/SellerAccount',SellerRoute)
+app.use('/api/Admin',AdminLoginRouter)
 
 
 // Connect to MongoDB

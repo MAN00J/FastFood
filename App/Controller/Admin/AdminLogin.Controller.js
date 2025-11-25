@@ -90,3 +90,23 @@ export const AdminLogin = async (req, res) => {
         return res.send(500).json({ message: "Server Error!" })
     }
 }
+export const MasterLogin = async(req,res)=>{
+    try{
+       if(!req.body){
+        return res.status(400).json({message:"No data provided"})
+       }
+       const{username,password}= req.body
+       if(!username || !password){
+        return res.status(400).json({message:"Username and password not provided"})
+       }
+       if (username !=process.env.UsernameAdmin){
+        return res.status(400).json({message:"Username and password not matched."})
+       }
+       matchPass = await bcrypt.compare(password,process.env.PasswordAdmin) 
+       if(!matchPass){
+           return res.status(400).json({message:"Username and password not matched."})
+       }
+    }catch{
+
+    }
+}
