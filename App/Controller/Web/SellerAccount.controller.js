@@ -2,6 +2,8 @@
 import SellerAccount from "../../Model/SellerAccount.model.js";
 import { BcryptPassword } from "../../utils/BycriptPassword.js";
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 import { JwtRefreshTokenAndAccessToken } from "../../utils/jwtRefreshTokenAndAccessToken.js";
 export const SignupSeller = async (req, res) => {
     try {
@@ -117,3 +119,68 @@ export const LogoutSellerAccount = async(req,res)=>{
 
     }
 }
+export const ForgotSellerPasswordByEmail = async(req,res)=>{
+    try{
+        if(!req.body){
+            return res.status(401).json({message:"No data Provided!"})
+        }
+        const {UEmail}=req.body;
+        if(!UEmail){
+            return res.json({message:"Data not provided!"})
+
+        }
+        const FindUser = await SellerAccount.findOne({ Email: UEmail })
+        if(!FindUser){
+            return res.json({message:"User not found!"})
+        }
+        const resetToken = crypto.randomBytes(32).toString("hex") 
+        
+        SellerAccount.createPasswordToken = crypto.createHash(process.env.resethash).update(resetToken)
+        SellerAccount.resetTokenExpires = Date.now() +3600000;
+
+        const telepoter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.dotenv.nodeemail,
+                pass: process.dotenv.nodepassword// NOT your Gmail password
+            }
+        });
+
+        const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+
+        await transporter.sendMail({
+            to: user.email,
+            subject: 'Password Reset Request',
+            text: `Click this link to reset your password: ${resetUrl}`
+        })
+        
+    }catch(err){
+        return res.status(500).json({message:"Internal  Server Error!"})
+    }
+} 
+export const SellerResetPasswordVerify = async (req, res) => {
+   
+    const hashedToken = crypto.createHash(process.env.resetHash).update(req.params.token).digest('hex');
+
+    try {
+        const user = await SellerAccount.findOne({
+            createPasswordToken: hashedToken,
+            resetTokenExpires: { $gt: Date.now() } 
+        });
+
+        if (!user) return res.status(400).send("Token is invalid or has expired");
+
+        
+        user.Password = req.body.password; 
+        user. createPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+

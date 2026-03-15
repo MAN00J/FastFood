@@ -37,6 +37,12 @@ const SellerModel = new Schema({
     RefreshToken:{
         type:String
     },
+    createPasswordToken:{
+        type:String
+    },
+    resetTokenExpires:{
+        type:String
+    },
     Status:{
         type:String
     }
